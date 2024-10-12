@@ -1,0 +1,81 @@
+.admin-page {
+    width: 100vw;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+header {
+    width: 100%;
+    margin-bottom: 20px; /* Space below the header */
+    text-align: center; /* Center header text */
+}
+
+.page-title {
+    background: linear-gradient(90deg, #4caf50, #8bc34a); /* Green gradient */
+    color: white;
+    padding: 15px 20px;
+    margin: 0;
+    border-radius: 5px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+}
+
+main {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+.event-form {
+    display: flex;
+    flex-direction: column;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    width: 400px; /* Fixed width for form */
+}
+
+h2 {
+    margin-bottom: 20px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+input, textarea {
+    margin-bottom: 15px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    transition: border 0.3s;
+}
+
+input:focus, textarea:focus {
+    border-color: #4caf50; /* Focus color */
+    outline: none;
+}
+
+.submit-button {
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    cursor: pointer;
+    font-size: 16px;
+    background: #4caf50;
+}
+
+.submit-button:hover {
+    background: #45a049; /* Darker shade on hover */
+}
+
+.login-link {
+    color: #4caf50;
+}
+
+.register-link {
+    color: #4caf50;
+}

@@ -1,0 +1,73 @@
+.welcome-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.welcome-text {
+    font-size: 10rem;
+    margin-bottom: 2rem;
+}
+
+.button-container {
+    display: flex;
+    gap: 1rem;
+}
+
+/* New CSS for Log In button */
+.login-button {
+    position: absolute; /* Positioning it absolutely */
+    top: 20px; /* Adjust as needed */
+    right: 20px; /* Adjust as needed */
+    padding: 0.5rem 1rem;
+    font-size: 1.5rem; /* Smaller font size for the log in button */
+    cursor: pointer;
+    background: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+.login-button:hover {
+    background: #45a049;
+}
+
+.logout-button {
+    position: absolute; /* Positioning it absolutely */
+    top: 20px; /* Adjust as needed */
+    right: 20px; /* Adjust as needed */
+    padding: 0.5rem 1rem;
+    font-size: 1.5rem; /* Smaller font size for the log out button */
+    cursor: pointer;
+    background: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+.logout-button:hover {
+    background: #45a049;
+}
+
+.welcome-button {
+    padding: 0.5rem 1rem;
+    font-size: 2rem;
+    cursor: pointer;
+    background: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+.welcome-button:hover {
+    background: #45a049;
+}
