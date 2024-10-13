@@ -23,12 +23,43 @@ mongoose.connect(process.env.MONGODB_URL)
 /******************* ADD EVENT *******************/
 // Define Event Schema
 const eventSchema = new mongoose.Schema({
-    name: String,
-    date: Date,
-    time: String,
-    place: String,
-    slot: Number,
-    description: String,
+    title: {
+        type: String,
+        required: true,
+        trim: true
+    },
+    description: {
+        type: String,
+        required: true,
+        trim: true
+    },
+    date: {
+        type: Date,
+        required: true
+    },
+    location: {
+        type: String,
+        required: true,
+        trim: true
+    },
+    creator: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+    },
+    usersJoined: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    }],
+    slots: {
+        type: Number,
+        required: true,
+        min: 1 // Ensure at least 1 slot is available for an event
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now
+    }
 })
 
 const Event = mongoose.model('Event', eventSchema)
@@ -51,7 +82,7 @@ app.post('/api/events', async (req, res) => {
 app.post('/api/events/:id/reduce-slot', async (req, res) => {
     const { id } = req.params
     console.log("here:", id)
-    
+
     try {
         const event = await Event.findById(id)
 
@@ -135,8 +166,8 @@ const userSchema = new mongoose.Schema({
     lastName: String,
     email: String,
     password: String,
-  })
-  
+})
+
 const User = mongoose.model("User", userSchema)
 
 
@@ -160,9 +191,9 @@ app.post("/login", async (req, res) => {
     try {
         const user = await User.findOne({ email, password })
         if (user) {
-        res.json({ success: true })
+            res.json({ success: true })
         } else {
-        res.json({ success: false })
+            res.json({ success: false })
         }
     } catch (err) {
         res.status(500).json({ error: "Failed to log in" })

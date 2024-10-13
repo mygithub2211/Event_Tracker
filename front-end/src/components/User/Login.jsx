@@ -1,11 +1,10 @@
-// LoginPage.jsx
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 function LoginPage() {
     const [credentials, setCredentials] = useState({
         email: '',
-        password: ''
+        gNumber: ''  // Changed from password to gNumber
     })
     const [message, setMessage] = useState('')
     const navigate = useNavigate()
@@ -22,7 +21,7 @@ function LoginPage() {
         e.preventDefault()
 
         try {
-            const response = await fetch('http://localhost:4000/login', {
+            const response = await fetch('http://localhost:5000/api/users/signin', {  // Adjusted URL to match the backend route
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -32,12 +31,12 @@ function LoginPage() {
 
             const result = await response.json()
 
-            if (result.success) {
+            if (response.ok) {  // Checking if the response is OK
                 setMessage('Login successful! Redirecting...')
                 localStorage.setItem('isAuthenticated', 'true')
 
                 setTimeout(() => {
-                    navigate('/') // Navigate to the Welcome page
+                    navigate('/')  // Navigate to the home page or another protected route
                 }, 2000)
             } else {
                 setMessage(`Login failed: ${result.message}`)
@@ -45,7 +44,7 @@ function LoginPage() {
 
             setCredentials({
                 email: '',
-                password: ''
+                gNumber: ''  // Reset the gNumber field as well
             })
         } catch (error) {
             console.error('Error processing login:', error)
@@ -74,11 +73,11 @@ function LoginPage() {
                         />
 
                         <input
-                            type="password"
-                            name="password"
-                            value={credentials.password}
+                            type="text"
+                            name="gNumber"  // Changed input field to gNumber
+                            value={credentials.gNumber}
                             onChange={handleInputChange}
-                            placeholder="Password"
+                            placeholder="gNumber (8 digits)"
                             required
                         />
 

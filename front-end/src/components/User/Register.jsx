@@ -5,7 +5,7 @@ function RegisterPage() {
         firstName: '',
         lastName: '',
         email: '',
-        password: ''
+        gNumber: ''  // Added gNumber
     })
     const [message, setMessage] = useState('')
     const [success, setSuccess] = useState(false) // New state to track success
@@ -23,7 +23,7 @@ function RegisterPage() {
 
         try {
             // Register the user
-            const response = await fetch('http://localhost:4000/register', {
+            const response = await fetch('http://localhost:5000/api/users/signup', {  // Adjusted the route to /signup
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -33,7 +33,7 @@ function RegisterPage() {
 
             const result = await response.json()
 
-            if (result.success) {
+            if (response.ok) {
                 setMessage('Registration successful!')
                 setSuccess(true) // Set success state to true
             } else {
@@ -46,7 +46,7 @@ function RegisterPage() {
                 firstName: '',
                 lastName: '',
                 email: '',
-                password: '',
+                gNumber: '',  // Reset gNumber field as well
             })
         } catch (error) {
             console.error('Error processing registration:', error)
@@ -94,11 +94,11 @@ function RegisterPage() {
                         />
 
                         <input
-                            type='password'
-                            name='password'
-                            value={user.password}
+                            type='text'
+                            name='gNumber'  // Input for gNumber
+                            value={user.gNumber}
                             onChange={handleInputChange}
-                            placeholder='Password'
+                            placeholder='gNumber (8 digits)'
                             required
                         />
 
