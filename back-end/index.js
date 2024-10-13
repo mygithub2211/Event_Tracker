@@ -43,35 +43,9 @@ app.post('/api/events', async (req, res) => {
         res.status(500).json({ message: 'Error adding event', error })
     }
 })
-/***********************************************/
+/***************************************************/
 
 
-/********************* PHUC ***********************/
-// API endpoint to reduce slots by 1 when a student enrolls
-app.post('/api/events/:id/reduce-slot', async (req, res) => {
-    const { id } = req.params
-    console.log("here:", id)
-    
-    try {
-        const event = await Event.findById(id)
-
-        if (!event) {
-            return res.status(404).json({ message: 'Event not found' })
-        }
-
-        if (event.slot <= 0) {
-            return res.status(400).json({ message: 'No more slots available' })
-        }
-
-        event.slot -= 1 // Reduce the slot count
-        await event.save() // Save the updated event
-        res.status(200).json({ message: 'Slot reduced successfully!', slot: event.slot })
-    } catch (error) {
-        console.error('Error reducing slot:', error)
-        res.status(500).json({ message: 'Error reducing slot', error })
-    }
-})
-/*****************************************************/
 
 
 /******************* Fetch Events To The Screen *******************/
@@ -97,7 +71,6 @@ const transporter = nodemailer.createTransport({
         pass: process.env.EMAIL_PASS  // App-specific password
     }
 })
-
 
 // API route to send a confirmation email
 app.post('/send-confirmation-email', (req, res) => {
@@ -139,7 +112,6 @@ const userSchema = new mongoose.Schema({
   
 const User = mongoose.model("User", userSchema)
 
-
 // Register route
 app.post("/register", async (req, res) => {
     const { firstName, lastName, email, password } = req.body
@@ -168,7 +140,8 @@ app.post("/login", async (req, res) => {
         res.status(500).json({ error: "Failed to log in" })
     }
 })
-/**********************************************************/
+/**************************************************************/
+
 
 // Basic health check route
 app.get('/', (req, res) => {

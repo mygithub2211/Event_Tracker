@@ -56,7 +56,7 @@ function RegisterPage() {
     }
 
     return (
-        <div className='admin-page'>
+        <div className='container'>
             <header>
                 <h1 className='page-title'>Event Tracker</h1>
             </header>

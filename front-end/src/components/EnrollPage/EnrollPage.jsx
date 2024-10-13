@@ -1,29 +1,28 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom' // Import useNavigate
 
-function EnrollPage({ eventId }) { // Accept eventId as a prop to identify the event
-    const navigate = useNavigate(); // Initialize useNavigate
-    const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
-
+function EnrollPage() { // Accept eventId as a prop to identify the event
+    const navigate = useNavigate() // Initialize useNavigate
+    const [message, setMessage] = useState('')
+    const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true'
+   
     const [student, setStudent] = useState({
         firstName: '',
         lastName: '',
         gNumber: '',
         email: ''
-    });
-    const [message, setMessage] = useState('');
-
+    })
+    
     const handleInputChange = (e) => {
-        const { name, value } = e.target;
+        const { name, value } = e.target
         setStudent(prevStudent => ({
             ...prevStudent,
             [name]: value
-        }));
-    };
+        }))
+    }
 
     const handleSubmit = async (e) => {
-        e.preventDefault();
-
+        e.preventDefault()
         try {
             // Send confirmation email
             const emailResponse = await fetch('http://localhost:4000/send-confirmation-email', {
@@ -32,38 +31,15 @@ function EnrollPage({ eventId }) { // Accept eventId as a prop to identify the e
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(student)
-            });
+            })
 
-            const emailResult = await emailResponse.json();
+            const emailResult = await emailResponse.json()
 
             if (emailResult.success) {
-                setMessage('Confirmation email sent successfully!');
+                setMessage('Confirmation email sent successfully!')
             } else {
-                setMessage(`Failed to send confirmation email: ${emailResult.message}`);
+                setMessage(`Failed to send confirmation email: ${emailResult.message}`)
             }
-
-
-
-
-
-            // REDUCE EVENT SLOT BY 1 - PHUC
-            const slotResponse = await fetch(`http://localhost:4000/api/events/${eventId}/reduce-slot`, {
-                method: 'POST',
-            });
-
-            const slotResult = await slotResponse.json();
-
-            if (slotResult.message === 'Slot reduced successfully!') {
-                setMessage('You have successfully joined the event!');
-            } else {
-                setMessage(`Failed to join event: ${slotResult.message}`);
-            }
-            ///////////////////////////////////////////////
-
-
-
-
-
 
             // Reset form fields
             setStudent({
@@ -71,50 +47,49 @@ function EnrollPage({ eventId }) { // Accept eventId as a prop to identify the e
                 lastName: '',
                 gNumber: '',
                 email: '',
-            });
+            })
         } catch (error) {
-            console.error('Error processing enrollment:', error);
-            setMessage('Error occurred while enrolling. Please try again later.');
+            console.error('Error processing enrollment:', error)
+            setMessage('Error occurred while enrolling. Please try again later.')
         }
-    };
+    }
 
     const handleLogout = () => {
         // Clear authentication status from local storage
-        localStorage.removeItem('isAuthenticated');
+        localStorage.removeItem('isAuthenticated')
         // Redirect to login page
-        navigate('/'); // Use navigate to redirect after logout
-    };
+        navigate('/') // Use navigate to redirect after logout
+    }
 
     return (
-        <div className="admin-page">
+        <div className='container'>
             <header>
-                <h1 className="page-title">Event Tracker</h1>
+                <h1 className='page-title'>Event Tracker</h1>
                 {isAuthenticated && (
                     <button className='logout-button' onClick={handleLogout}>Log Out</button>
                 )}
             </header>
 
             <main>
-                <div className="event-form">
+                <div className='event-form'>
                     <h2>Enroll</h2>
 
                     <form onSubmit={handleSubmit}>
-                        <input type="text" name="firstName" value={student.firstName} onChange={handleInputChange} placeholder="First Name" required />
+                        <input type='text' name='firstName' value={student.firstName} onChange={handleInputChange} placeholder='First Name' required />
 
-                        <input type="text" name="lastName" value={student.lastName} onChange={handleInputChange} placeholder="Last Name" required />
+                        <input type='text' name='lastName' value={student.lastName} onChange={handleInputChange} placeholder='Last Name' required />
 
-                        <input type="text" name="gNumber" value={student.gNumber} onChange={handleInputChange} placeholder="G# (e.g. G12345678)" required />
+                        <input type='text' name='gNumber' value={student.gNumber} onChange={handleInputChange} placeholder='G# (e.g. G12345678)' required />
+                        
+                        <input type='email' name='email' value={student.email} onChange={handleInputChange} placeholder='Email' required />
 
-                        <input type="email" name="email" value={student.email} onChange={handleInputChange} placeholder="Email" required />
-
-                        <button className="submit-button" type="submit">Join</button>
+                        <button className='submit-button' type='submit'>Join</button>
                     </form>
-
                     {message && <p>{message}</p>}
                 </div>
             </main> 
         </div>
-    );
+    )
 }
 
-export default EnrollPage;
+export default EnrollPage

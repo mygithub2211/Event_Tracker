@@ -3,8 +3,8 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 100%;
-    width: 100%;
+    min-height: 100vh;
+    width: 100vw;
     position: absolute;
     top: 0;
     left: 0;
@@ -20,7 +20,7 @@
     gap: 1rem;
 }
 
-/* New CSS for Log In button */
+/* CSS for Log In/Log Out button */
 .login-button {
     position: absolute; /* Positioning it absolutely */
     top: 20px; /* Adjust as needed */
@@ -59,12 +59,12 @@
 
 .welcome-button {
     padding: 0.5rem 1rem;
-    font-size: 2rem;
+    font-size: 1.5rem;
     cursor: pointer;
     background: #4caf50;
     color: white;
     border: none;
-    border-radius: 4px;
+    border-radius: 10px;
     transition: background-color 0.3s;
 }
 
