@@ -6,34 +6,13 @@ import './WelcomePage.css';
 function WelcomePage() {
     const navigate = useNavigate();
 
-    // Check authentication status
-    const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
-
-    const addEvent = () => {
-        if (isAuthenticated) {
-            navigate('/add');
-        } else {
-            navigate('/login');
-        }
+    // Navigation to Sign In or Sign Up page
+    const handleSignIn = () => {
+        navigate('/signin');
     };
 
-    const showEvent = () => {
-        if (isAuthenticated) {
-            navigate('/event');
-        } else {
-            navigate('/login');
-        }
-    };
-
-    const handleLogin = () => {
-        navigate('/login'); // Navigate to the login page
-    };
-
-    const handleLogout = () => {
-        // Clear authentication status from local storage
-        localStorage.removeItem('isAuthenticated');
-        // Redirect to login page
-        navigate('/');
+    const handleSignUp = () => {
+        navigate('/signup');
     };
 
     return (
@@ -45,8 +24,8 @@ function WelcomePage() {
                 </p>
 
                 <div className='button-container'>
-                    <button className='welcome-button' onClick={addEvent}>Add Event</button>
-                    <button className='welcome-button' onClick={showEvent}>Join Event</button>
+                    <button className='welcome-button' onClick={handleSignIn}>Sign In</button>
+                    <button className='welcome-button' onClick={handleSignUp}>Sign Up</button>
                 </div>
             </div>
 
@@ -55,10 +34,6 @@ function WelcomePage() {
                 <img className='school-logo' src={MasonLogo} alt='School Logo' />
             </div>
 
-            {/* Conditional Rendering for Log In / Log Out Button */}
-            {isAuthenticated && (
-                <button className='logout-button' onClick={handleLogout}>Log Out</button>
-            )}
         </div>
     );
 }

@@ -4,6 +4,7 @@
     justify-content: space-between;
     align-items: center;
     height: 100vh;
+    /* Full screen height */
     /* Use vh for full viewport height */
     width: 100vw;
     /* Ensure full width of the viewport */
@@ -90,23 +91,4 @@
     /* Adjust size for better visual balance */
     height: auto;
     opacity: 0.9;
-}
-
-/* Logout Button Styling */
-.logout-button {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    padding: 0.8rem 1.5rem;
-    font-size: 1.2rem;
-    cursor: pointer;
-    background: #4caf50;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    transition: background-color 0.3s;
-}
-
-.logout-button:hover {
-    background: #388e3c;
 }

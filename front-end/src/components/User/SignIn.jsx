@@ -1,21 +1,23 @@
-import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import React, { useState } from 'react';
+import './SignUp.css'; // Using the same CSS as SignUpPage for consistent styling
+import { useNavigate } from 'react-router-dom';
 
-function LoginPage() {
+function SignInPage() {
     const [credentials, setCredentials] = useState({
         email: '',
         gNumber: ''
-    })
-    const [message, setMessage] = useState('')
-    const navigate = useNavigate()
+    });
+    const [message, setMessage] = useState('');
+    const [success, setSuccess] = useState(false);
+    const navigate = useNavigate();
 
     const handleInputChange = (e) => {
-        const { name, value } = e.target
+        const { name, value } = e.target;
         setCredentials(prevCredentials => ({
             ...prevCredentials,
             [name]: value
-        }))
-    }
+        }));
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -32,21 +34,22 @@ function LoginPage() {
             const result = await response.json();
 
             if (response.ok) {
-                setMessage('Login successful! Redirecting...');
+                setMessage('Login successful!');
+                setSuccess(true);
                 localStorage.setItem('isAuthenticated', 'true');
 
                 // Store user details in localStorage
                 localStorage.setItem('user', JSON.stringify(result.user));
-                const signedInUser = JSON.parse(localStorage.getItem('user'));
-                console.log(signedInUser);
-                console.log('Signed in user:', signedInUser);
 
+                // Show alert upon successful login
+                alert('You have successfully logged in!');
 
                 setTimeout(() => {
                     navigate('/'); // Navigate to the Welcome page
                 }, 2000);
             } else {
                 setMessage(`Login failed: ${result.message}`);
+                setSuccess(false);
             }
 
             setCredentials({
@@ -56,18 +59,18 @@ function LoginPage() {
         } catch (error) {
             console.error('Error processing login:', error);
             setMessage('An error occurred while logging in. Please try again later.');
+            setSuccess(false);
         }
     };
 
     return (
-        <div className="admin-page">
-            <header>
-                <h1 className="page-title">Event Tracker</h1>
-            </header>
-
-            <main>
-                <div className="event-form">
-                    <h2>Login</h2>
+        <div className="signup-page"> {/* Reusing the same layout */}
+            <div className="signup-content">
+                <header>
+                    <h1 className="page-title">Gather Mason</h1>
+                </header>
+                <div className="signup-form">
+                    <h2>Sign In</h2>
 
                     <form onSubmit={handleSubmit}>
                         <input
@@ -78,10 +81,9 @@ function LoginPage() {
                             placeholder="Email"
                             required
                         />
-
                         <input
                             type="text"
-                            name="gNumber"  // Changed input field to gNumber
+                            name="gNumber"
                             value={credentials.gNumber}
                             onChange={handleInputChange}
                             placeholder="gNumber (8 digits)"
@@ -91,14 +93,14 @@ function LoginPage() {
                         <button className="submit-button" type="submit">Login</button>
                     </form>
 
-                    {message && <p>{message}</p>}
+                    {message && <p className={success ? 'success-message' : 'error-message'}>{message}</p>}
                     <div>
-                        <p>Don't have an account? <a className="register-link" href="/register">Register</a></p>
+                        <p>Don't have an account? <a className="login-link" href="/register">Sign Up</a></p>
                     </div>
                 </div>
-            </main>
+            </div>
         </div>
-    )
+    );
 }
 
-export default LoginPage
+export default SignInPage;

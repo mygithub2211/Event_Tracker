@@ -1,0 +1,86 @@
+/* Full page background, centered vertically and horizontally */
+.signin-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100vw;
+    background: #e8f5e9;
+    /* Light green background */
+    overflow: hidden;
+    /* Prevent scrolling */
+}
+
+/* Centered content with larger size to cover more space */
+.signin-content {
+    background: white;
+    padding: 4rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    width: 50%;
+    /* Make it wider */
+    max-width: 800px;
+    /* Set max width */
+    text-align: center;
+}
+
+/* Title */
+.page-title {
+    font-size: 3rem;
+    color: #4caf50;
+    margin-bottom: 2rem;
+}
+
+/* Form container */
+.signin-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+/* Inputs */
+.signin-form input {
+    padding: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 1.25rem;
+    /* Larger font size */
+}
+
+/* Submit button */
+.submit-button {
+    padding: 1rem;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 1.5rem;
+    /* Larger button */
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.submit-button:hover {
+    background-color: #388e3c;
+}
+
+/* Success and error messages */
+.success-message {
+    color: #4caf50;
+    font-weight: bold;
+}
+
+.error-message {
+    color: red;
+    font-weight: bold;
+}
+
+/* Register link styling */
+.register-link {
+    color: #4caf50;
+    text-decoration: none;
+}
+
+.register-link:hover {
+    text-decoration: underline;
+}

@@ -1,14 +1,15 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
+import './SignUp.css'; // Link to the updated CSS
 
-function RegisterPage() {
+function SignUpPage() {
     const [user, setUser] = useState({
         firstName: '',
         lastName: '',
         email: '',
-        gNumber: ''  // Added gNumber
+        gNumber: ''
     })
     const [message, setMessage] = useState('')
-    const [success, setSuccess] = useState(false) // New state to track success
+    const [success, setSuccess] = useState(false)
 
     const handleInputChange = (e) => {
         const { name, value } = e.target
@@ -22,7 +23,6 @@ function RegisterPage() {
         e.preventDefault()
 
         try {
-            // Register the user
             const response = await fetch('http://localhost:5000/api/users/signup', {
                 method: 'POST',
                 headers: {
@@ -35,84 +35,80 @@ function RegisterPage() {
 
             if (response.ok) {
                 setMessage('Registration successful!')
-                setSuccess(true) // Set success state to true
+                setSuccess(true)
+                alert('You have successfully signed up!'); // Show alert
             } else {
                 setMessage(`Registration failed: ${result.message}`)
-                setSuccess(false) // Set success state to false
+                setSuccess(false)
             }
 
-            // Reset form fields
             setUser({
                 firstName: '',
                 lastName: '',
                 email: '',
-                gNumber: '',  // Reset gNumber field as well
+                gNumber: ''
             })
         } catch (error) {
             console.error('Error processing registration:', error)
-            setMessage('An error occurred while registering. Please try again later.')
-            setSuccess(false) // Set success state to false
+            setMessage('An error occurred. Please try again later.')
+            setSuccess(false)
         }
     }
 
     return (
-        <div className='admin-page'>
-            <header>
-                <h1 className='page-title'>Event Tracker</h1>
-            </header>
-
-            <main>
-                <div className='event-form'>
-                    <h2>Register</h2>
+        <div className="signup-page">
+            <div className="signup-content">
+                <header>
+                    <h1 className="page-title">Gather Mason</h1>
+                </header>
+                <div className="signup-form">
+                    <h2>Sign Up</h2>
 
                     <form onSubmit={handleSubmit}>
                         <input
-                            type='text'
-                            name='firstName'
+                            type="text"
+                            name="firstName"
                             value={user.firstName}
                             onChange={handleInputChange}
-                            placeholder='First Name'
+                            placeholder="First Name"
                             required
                         />
-
                         <input
-                            type='text'
-                            name='lastName'
+                            type="text"
+                            name="lastName"
                             value={user.lastName}
                             onChange={handleInputChange}
-                            placeholder='Last Name'
+                            placeholder="Last Name"
                             required
                         />
-
                         <input
-                            type='email'
-                            name='email'
+                            type="email"
+                            name="email"
                             value={user.email}
                             onChange={handleInputChange}
-                            placeholder='Email'
+                            placeholder="Email"
                             required
                         />
-
                         <input
-                            type='text'
-                            name='gNumber'  // Input for gNumber
+                            type="text"
+                            name="gNumber"
                             value={user.gNumber}
                             onChange={handleInputChange}
-                            placeholder='gNumber (8 digits)'
+                            placeholder="gNumber (8 digits)"
                             required
                         />
 
-                        <button className='submit-button' type='submit'>Register</button>
+                        <button className="submit-button" type="submit">Register</button>
                     </form>
 
                     {message && <p className={success ? 'success-message' : 'error-message'}>{message}</p>}
                     <div>
-                        <p>Have an account? <a className='login-link' href='/login'>Login</a></p>
+                        <p>Already have an account? <a className="login-link" href="/login">Login</a></p>
                     </div>
                 </div>
-            </main>
+            </div>
         </div>
-    )
+    );
 }
 
-export default RegisterPage
+export default SignUpPage;

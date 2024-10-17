@@ -4,8 +4,8 @@ import WelcomePage from "./components/WelcomePage/WelcomePage.jsx"
 import AddPage from "./components/AddPage/AddPage.jsx"
 import EnrollPage from "./components/EnrollPage/EnrollPage.jsx"
 import EventPage from "./components/EventPage/EventPage.jsx"
-import Login from "./components/User/Login.jsx"
-import Register from "./components/User/Register.jsx"
+import SignIn from "./components/User/SignIn.jsx"
+import SignUp from "./components/User/SignUp.jsx"
 
 function App() {
   return (
@@ -15,8 +15,8 @@ function App() {
         <Route path="/add" element={<AddPage />} />
         <Route path="/enroll/:eventId" element={<EnrollPage />} />
         <Route path="/event" element={<EventPage />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
+        <Route path="/signin" element={<SignIn />} />
+        <Route path="/signup" element={<SignUp />} />
       </Routes>
     </Router>
   )
