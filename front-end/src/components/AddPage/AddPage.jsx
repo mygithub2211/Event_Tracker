@@ -52,6 +52,13 @@ function AddPage() {
         }
 
         try {
+            // Add a confirmation popup for adding event
+            const isConfirmed = window.confirm("Do you want to add this event?");
+            if (!isConfirmed) {
+                console.log('User canceled adding the event.');
+                return; // If user cancel joining, do nothing and return
+            };
+
             const eventInfo = { title: event.title, description: event.description, date: event.date, location: event.location, slots: event.slots, firstName: signedInUser.firstName, lastName: signedInUser.lastName, email: signedInUser.email, gNumber: signedInUser.gNumber };
             const response = await fetch('http://localhost:5000/api/events/create', {
                 method: 'POST',
@@ -61,12 +68,17 @@ function AddPage() {
                 body: JSON.stringify(eventInfo),
             });
 
-            if (!response.ok) {
+            const result = await response.json();
+
+            if (response.ok) {
+                console.log('Joined successfully:', result);
+                navigate('/');  // Redirect to the welcome page
+            }
+            else {
                 throw new Error('Failed to add event');
             }
 
-            const data = await response.json();
-            console.log(data.message); // Log the success message or handle it as needed
+
 
             // Reset form fields
             setEvent({
