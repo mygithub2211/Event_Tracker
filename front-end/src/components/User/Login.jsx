@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'
 function LoginPage() {
     const [credentials, setCredentials] = useState({
         email: '',
-        gNumber: ''  // Changed from password to gNumber
+        gNumber: ''
     })
     const [message, setMessage] = useState('')
     const navigate = useNavigate()
@@ -18,39 +18,46 @@ function LoginPage() {
     }
 
     const handleSubmit = async (e) => {
-        e.preventDefault()
+        e.preventDefault();
 
         try {
-            const response = await fetch('http://localhost:5000/api/users/signin', {  // Adjusted URL to match the backend route
+            const response = await fetch('http://localhost:5000/api/users/signin', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(credentials)
-            })
+            });
 
-            const result = await response.json()
+            const result = await response.json();
 
-            if (response.ok) {  // Checking if the response is OK
-                setMessage('Login successful! Redirecting...')
-                localStorage.setItem('isAuthenticated', 'true')
+            if (response.ok) {
+                setMessage('Login successful! Redirecting...');
+                localStorage.setItem('isAuthenticated', 'true');
+
+                // Store user details in localStorage
+                localStorage.setItem('user', JSON.stringify(result.user));
+                const signedInUser = JSON.parse(localStorage.getItem('user'));
+                console.log(signedInUser);
+                console.log('Signed in user:', signedInUser);
+
 
                 setTimeout(() => {
-                    navigate('/')  // Navigate to the home page or another protected route
-                }, 2000)
+                    navigate('/'); // Navigate to the Welcome page
+                }, 2000);
             } else {
-                setMessage(`Login failed: ${result.message}`)
+                setMessage(`Login failed: ${result.message}`);
             }
 
             setCredentials({
                 email: '',
-                gNumber: ''  // Reset the gNumber field as well
-            })
+                gNumber: ''
+            });
         } catch (error) {
-            console.error('Error processing login:', error)
-            setMessage('An error occurred while logging in. Please try again later.')
+            console.error('Error processing login:', error);
+            setMessage('An error occurred while logging in. Please try again later.');
         }
-    }
+    };
 
     return (
         <div className="admin-page">

@@ -19,6 +19,7 @@ const eventSchema = new mongoose.Schema({
     location: { type: String, required: true },
     creator: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     usersJoined: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+    totalSlots: { type: Number, required: true }, // Total initial slots
     slots: { type: Number, required: true, min: 1 },
     createdAt: { type: Date, default: Date.now }
 });

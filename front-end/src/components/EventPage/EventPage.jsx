@@ -1,25 +1,44 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import './EventPage.css'; 
+import './EventPage.css';
 
 function EventPage() {
-    const navigate = useNavigate();
     const [events, setEvents] = useState([]);
+    const [filteredEvents, setFilteredEvents] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [filters, setFilters] = useState({
+        name: '',
+        location: '',
+        date: ''
+    });
     const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
+    const signedInUser = JSON.parse(localStorage.getItem('user'));
+    console.log('signedInUser in list of event:', signedInUser);
+
+    // You should also retrieve user data from localStorage if the user is logged in
+    const userData = {
+        firstName: localStorage.getItem('firstName'),
+        lastName: localStorage.getItem('lastName'),
+        email: localStorage.getItem('email'),
+        gNumber: localStorage.getItem('gNumber')
+    };
 
     useEffect(() => {
         fetchEvents();
-    }, []); // Empty dependency array to run only once on mount
+    }, []);
 
+    useEffect(() => {
+        applyFilters();
+    }, [filters, events]);
+
+    // Fetch events from API
     async function fetchEvents() {
         try {
-            const response = await axios.get('http://localhost:4000/api/events');
-            console.log('API Response:', response.data); // Log the response data
+            const response = await axios.get('http://localhost:5000/api/events');
             if (Array.isArray(response.data)) {
                 setEvents(response.data);
+                setFilteredEvents(response.data);  // Initially, show all events
             } else {
                 setError('Unexpected data format');
             }
@@ -27,15 +46,94 @@ function EventPage() {
             console.error('Error fetching events:', error);
             setError('Failed to fetch events');
         } finally {
-            setLoading(false); // Set loading to false at the end of the try/catch
+            setLoading(false);
         }
     }
 
+    const handleFilterChange = (e) => {
+        const { name, value } = e.target;
+        setFilters(prevFilters => ({
+            ...prevFilters,
+            [name]: value
+        }));
+    };
+
+    const applyFilters = () => {
+        const filtered = events.filter(event => {
+            const matchesName = filters.name ? event.title.toLowerCase().includes(filters.name.toLowerCase()) : true;
+            const matchesLocation = filters.location ? event.location.toLowerCase().includes(filters.location.toLowerCase()) : true;
+            const matchesDate = filters.date ? new Date(event.date).toLocaleDateString() === new Date(filters.date).toLocaleDateString() : true;
+
+            return matchesName && matchesLocation && matchesDate;
+        });
+
+        setFilteredEvents(filtered);
+    };
+
+    // Function to handle joining the event
+    const handleJoinEvent = async (eventId) => {
+        //const userData = {
+        //    firstName: localStorage.getItem('firstName'),
+        //    lastName: localStorage.getItem('lastName'),
+        //    email: localStorage.getItem('email'),
+        //    gNumber: localStorage.getItem('gNumber')
+        //};
+
+        if (!signedInUser || !signedInUser.firstName || !signedInUser.lastName || !signedInUser.email || !signedInUser.gNumber) {
+            console.error('Missing user data, cannot join event');
+            setError('Missing user data, cannot join event');
+            return;
+        }
+
+        if (Object.keys(signedInUser).length === 0) {
+            console.error('signedInUser is an empty object');
+            setError('signedInUser is empty');
+            return;
+        }
+
+        const enrollData = { firstName: signedInUser.firstName, lastName: signedInUser.lastName, email: signedInUser.email, gNumber: signedInUser.gNumber }
+        console.log('Sending request to join event with data:', enrollData, 'for eventId:', eventId);
+
+
+        try {
+            console.log('Event ID for join request:', eventId);
+
+            const response = await fetch(`http://localhost:5000/api/events/join/${eventId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(enrollData)
+            });
+
+            const result = await response.json();
+            console.log('Server result:', result); // Log result from server
+
+            if (response.ok) {
+                console.log('Joined successfully:', result);
+                fetchEvents(); // Re-fetch events to update slot count
+            } else {
+                const errorResponse = await response.json();
+                console.error('Error joining event:', result.message);
+                setError(`Error: ${errorResponse.message}`);
+            }
+        } catch (error) {
+            console.error('Error joining event:', error);
+            setError('Error occurred while joining the event.');
+        }
+    };
+
+    // Function to handle logout
     const handleLogout = () => {
-        // Clear authentication status from local storage
+        // Clear user and authentication data from local storage
         localStorage.removeItem('isAuthenticated');
+        localStorage.removeItem('firstName');
+        localStorage.removeItem('lastName');
+        localStorage.removeItem('email');
+        localStorage.removeItem('gNumber');
+
         // Redirect to login page
-        navigate('/'); // Use navigate to redirect after logout
+        window.location.href = '/login';
     };
 
     if (loading) {
@@ -55,42 +153,55 @@ function EventPage() {
                 )}
             </header>
 
-            <table>
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Date</th>
-                        <th>Time</th>
-                        <th>Place</th>
-                        <th>Slots</th>
-                        <th>Description</th>
-                        <th>Join</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {events.map((event) => {
-                        console.log('Event ID:', event._id); // Log the event ID
-                        return (
-                            <tr key={event._id}>
-                                <td>{event.name}</td>
-                                <td>{new Date(event.date).toLocaleDateString()}</td>
-                                <td>{event.time}</td>
-                                <td>{event.place}</td>
-                                <td>{event.slot}</td>
-                                <td>{event.description}</td>
-                                <td>
-                                    <button 
-                                        className='join-button'
-                                        onClick={() => { navigate(`/enroll/${event._id}`)}}
-                                    >
-                                        Join
-                                    </button>
-                                </td>
-                            </tr>
-                        );
-                    })}
-                </tbody>
-            </table>
+            {/* Filter Section */}
+            <div className='filter-section'>
+                <input
+                    type="text"
+                    name="name"
+                    value={filters.name}
+                    onChange={handleFilterChange}
+                    placeholder="Filter by Name"
+                />
+                <input
+                    type="text"
+                    name="location"
+                    value={filters.location}
+                    onChange={handleFilterChange}
+                    placeholder="Filter by Location"
+                />
+                <input
+                    type="date"
+                    name="date"
+                    value={filters.date}
+                    onChange={handleFilterChange}
+                    placeholder="Filter by Date"
+                />
+            </div>
+
+            <div className='grid-container'>
+                {filteredEvents.map((event) => (
+                    <div className="card" key={event._id}>
+                        <h3>{event.title || 'Unnamed Event'}</h3>
+                        <p>Date: {new Date(event.date).toLocaleDateString()}</p>
+                        <p>Location: {event.location}</p>
+                        <p className="slots">
+                            Slots: {event.slots} / {event.totalSlots}
+                        </p>
+                        <div className="progress-bar">
+                            <div className="progress-fill"
+                                style={{ width: `${(event.slots / event.totalSlots) * 100}%` }}>
+                            </div>
+                        </div>
+                        <p className="description">Description: {event.description}</p>
+                        <button
+                            className='join-button'
+                            onClick={() => handleJoinEvent(event._id)}  // Call handleJoinEvent with event ID
+                        >
+                            Join
+                        </button>
+                    </div>
+                ))}
+            </div>
         </div>
     );
 }

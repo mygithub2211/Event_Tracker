@@ -1,45 +1,163 @@
-/* Styles for the table */
-table {
-    width: 100%; /* Full width of the container */
-    border-collapse: collapse; /* Remove gaps between cells */
-    margin-top: 20px; /* Space above the table */
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow effect */
-    background-color: #fff; /* White background for the table */
+/* Admin page styles */
+.admin-page {
+    padding: 20px;
 }
 
-thead {
-    background-color: #4CAF50; /* Header background color */
-    color: white; /* Header text color */
+/* Page title */
+.page-title {
+    text-align: center;
+    color: #333;
 }
 
-th, td {
-    padding: 15px; /* Space inside cells */
-    text-align: left; /* Align text to the left */
-    border-bottom: 1px solid #ddd; /* Bottom border for separation */
+/* Logout button */
+.logout-button {
+    float: right;
+    background-color: #f44336;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
-tbody tr:hover {
-    background-color: #f1f1f1; /* Highlight row on hover */
+.logout-button:hover {
+    background-color: #d32f2f;
 }
 
-tbody tr:nth-child(even) {
-    background-color: #f9f9f9; /* Zebra striping effect */
+/* Filter section */
+.filter-section {
+    display: flex;
+    justify-content: space-around;
+    margin: 20px 0;
 }
 
-tbody tr:nth-child(odd) {
-    background-color: #fff; /* Alternate odd rows */
-}
-
-.join-button {
+.filter-section input {
     padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    width: 200px;
+}
+
+/* Grid layout for events */
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+    padding: 20px;
+}
+
+/* Card styles */
+.card {
+    background-color: white;
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    /* Ensure the Join button stays at the bottom */
+    height: 100%;
+    /* Ensure card takes up full height */
+}
+
+.card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* Event title */
+.card h3 {
+    margin: 0;
+    font-size: 1.5em;
+    color: #333;
+}
+
+/* Description styling */
+.card p {
+    margin: 10px 0;
+    color: #666;
+}
+
+.card p.description {
+    height: 50px;
+    overflow-y: auto;
+    padding-right: 5px;
+    scrollbar-width: thin;
+    scrollbar-color: #888 transparent;
+}
+
+/* Scrollbar styling */
+.card p.description::-webkit-scrollbar {
+    width: 8px;
+}
+
+.card p.description::-webkit-scrollbar-thumb {
+    background-color: #888;
+    border-radius: 10px;
+}
+
+.card p.description::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+/* Slot visualization */
+.slot-visualization {
+    margin: 10px 0;
+}
+
+.slots-text {
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #4caf50;
+    /* Green color for available slots */
+}
+
+/* Slot visualization */
+.card .slots {
+    font-weight: bold;
+    color: #333;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+/* Progress bar container */
+.card .progress-bar {
+    background-color: #e0e0e0;
+    /* Gray background for total slots */
+    border-radius: 5px;
+    height: 12px;
+    width: 100%;
+    position: relative;
+}
+
+/* Filled part representing available slots */
+.card .progress-fill {
+    background-color: #4caf50;
+    /* Green for available slots */
+    height: 100%;
+    border-radius: 5px;
+    transition: width 0.3s ease;
+}
+
+/* Join button styling */
+.join-button {
+    align-self: flex-end;
+    /* Pushes the button to the bottom of the card */
+    padding: 10px 20px;
     border: none;
     border-radius: 5px;
+    background-color: #4caf50;
     color: white;
-    cursor: pointer;
     font-size: 16px;
-    background: #4caf50;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
 .join-button:hover {
-    background: #45a049; /* Darker shade on hover */
+    background-color: #45a049;
 }

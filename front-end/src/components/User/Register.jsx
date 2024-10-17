@@ -23,7 +23,7 @@ function RegisterPage() {
 
         try {
             // Register the user
-            const response = await fetch('http://localhost:5000/api/users/signup', {  // Adjusted the route to /signup
+            const response = await fetch('http://localhost:5000/api/users/signup', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

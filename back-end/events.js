@@ -27,6 +27,7 @@ router.post('/create', async (req, res) => {
             location,
             creator: creator._id,  // Assign the newly created or found user as the creator
             usersJoined: [],
+            totalSlots: slots,
             slots
         });
 
@@ -175,8 +176,20 @@ router.delete('/title/:title', async (req, res) => {
 
 // Join an event
 router.post('/join/:id', async (req, res) => {
+    console.log('Join event route hit with event ID:', req.params.id);
+    console.log('Request body:', req.body);
+
     try {
         const { firstName, lastName, email, gNumber } = req.body;
+        console.log("First Name is null: ", !firstName);
+        console.log("Last Name is null: ", !lastName);
+        console.log("Email is null: ", !email);
+        console.log("gNumber is null: ", !gNumber);
+
+        // Check if email or gNumber is missing
+        if (email == null || gNumber == null) {
+            return res.status(400).json({ message: 'Email and gNumber are required' });
+        }
         const event = await Event.findById(req.params.id);
 
         if (!event) {

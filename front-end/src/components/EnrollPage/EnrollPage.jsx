@@ -1,120 +1,106 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
-function EnrollPage({ eventId }) { // Accept eventId as a prop to identify the event
-    const navigate = useNavigate(); // Initialize useNavigate
-    const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
+function EventPage() {
+    const navigate = useNavigate();
+    const [events, setEvents] = useState([]);
 
-    const [student, setStudent] = useState({
-        firstName: '',
-        lastName: '',
-        gNumber: '',
-        email: ''
-    });
-    const [message, setMessage] = useState('');
+    // Get the signed-in user data from localStorage
+    const signedInUser = JSON.parse(localStorage.getItem('user'));
+    console.log('signedInUser in join event:', signedInUser);
 
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setStudent(prevStudent => ({
-            ...prevStudent,
-            [name]: value
-        }));
+    if (!signedInUser || !signedInUser.email || !signedInUser.gNumber) {
+        console.error('Missing user data, cannot join event');
+        return;
+    }
+
+    useEffect(() => {
+        fetchEvents();
+    }, []);
+
+    const fetchEvents = async () => {
+        try {
+            const response = await axios.get('http://localhost:5000/api/events');
+            setEvents(response.data);
+        } catch (error) {
+            console.error('Error fetching events:', error);
+        }
     };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+    const handleJoinEvent = async (eventId) => {
+        //const userData = {
+        //    firstName: localStorage.getItem('firstName'),
+        //    lastName: localStorage.getItem('lastName'),
+        //    email: localStorage.getItem('email'),
+        //    gNumber: localStorage.getItem('gNumber')
+        //};
+
+        if (!signedInUser || !signedInUser.firstName || !signedInUser.lastName || !signedInUser.email || !signedInUser.gNumber) {
+            console.error('Missing user data, cannot join event');
+            setError('Missing user data, cannot join event');
+            return;
+        }
+
+        if (Object.keys(signedInUser).length === 0) {
+            console.error('signedInUser is an empty object');
+            setError('signedInUser is empty');
+            return;
+        }
+
+        const enrollData = { firstName: signedInUser.firstName, lastName: signedInUser.lastName, email: signedInUser.email, gNumber: signedInUser.gNumber }
+        console.log('Sending request to join event with data:', enrollData, 'for eventId:', eventId);
+
 
         try {
-            // Send confirmation email
-            const emailResponse = await fetch('http://localhost:4000/send-confirmation-email', {
+            console.log('Event ID for join request:', eventId);
+
+            const response = await fetch(`http://localhost:5000/api/events/join/${eventId}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(student)
+                body: JSON.stringify(enrollData)
             });
 
-            const emailResult = await emailResponse.json();
+            const result = await response.json();
+            console.log('Server result:', result); // Log result from server
 
-            if (emailResult.success) {
-                setMessage('Confirmation email sent successfully!');
+            if (response.ok) {
+                console.log('Joined successfully:', result);
+                fetchEvents(); // Re-fetch events to update slot count
             } else {
-                setMessage(`Failed to send confirmation email: ${emailResult.message}`);
+                const errorResponse = await response.json();
+                console.error('Error joining event:', result.message);
+                setError(`Error: ${errorResponse.message}`);
             }
-
-
-
-
-
-            // REDUCE EVENT SLOT BY 1 - PHUC
-            const slotResponse = await fetch(`http://localhost:4000/api/events/${eventId}/reduce-slot`, {
-                method: 'POST',
-            });
-
-            const slotResult = await slotResponse.json();
-
-            if (slotResult.message === 'Slot reduced successfully!') {
-                setMessage('You have successfully joined the event!');
-            } else {
-                setMessage(`Failed to join event: ${slotResult.message}`);
-            }
-            ///////////////////////////////////////////////
-
-
-
-
-
-
-            // Reset form fields
-            setStudent({
-                firstName: '',
-                lastName: '',
-                gNumber: '',
-                email: '',
-            });
         } catch (error) {
-            console.error('Error processing enrollment:', error);
-            setMessage('Error occurred while enrolling. Please try again later.');
+            console.error('Error joining event:', error);
+            setError('Error occurred while joining the event.');
         }
     };
 
-    const handleLogout = () => {
-        // Clear authentication status from local storage
-        localStorage.removeItem('isAuthenticated');
-        // Redirect to login page
-        navigate('/'); // Use navigate to redirect after logout
-    };
-
     return (
-        <div className="admin-page">
-            <header>
-                <h1 className="page-title">Event Tracker</h1>
-                {isAuthenticated && (
-                    <button className='logout-button' onClick={handleLogout}>Log Out</button>
-                )}
-            </header>
-
-            <main>
-                <div className="event-form">
-                    <h2>Enroll</h2>
-
-                    <form onSubmit={handleSubmit}>
-                        <input type="text" name="firstName" value={student.firstName} onChange={handleInputChange} placeholder="First Name" required />
-
-                        <input type="text" name="lastName" value={student.lastName} onChange={handleInputChange} placeholder="Last Name" required />
-
-                        <input type="text" name="gNumber" value={student.gNumber} onChange={handleInputChange} placeholder="G# (e.g. G12345678)" required />
-
-                        <input type="email" name="email" value={student.email} onChange={handleInputChange} placeholder="Email" required />
-
-                        <button className="submit-button" type="submit">Join</button>
-                    </form>
-
-                    {message && <p>{message}</p>}
-                </div>
-            </main> 
+        <div>
+            <h1>Event List</h1>
+            <div className='event-list'>
+                {events.map(event => (
+                    <div key={event._id} className="event-card">
+                        <h3>{event.title || 'Unnamed Event'}</h3>
+                        <p>Date: {new Date(event.date).toLocaleDateString()}</p>
+                        <p>Location: {event.location}</p>
+                        <p>Slots: {event.slots}</p>
+                        <button
+                            className='join-button'
+                            onClick={() => handleJoinEvent(event._id)}  // Pass event._id here
+                        >
+                            Join
+                        </button>
+                    </div>
+                ))}
+            </div>
         </div>
     );
 }
 
-export default EnrollPage;
+export default EventPage;
