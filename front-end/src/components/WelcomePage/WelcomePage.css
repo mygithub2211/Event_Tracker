@@ -1,50 +1,104 @@
+/* Background styling and container setup */
 .welcome-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 100vh;
+    /* Use vh for full viewport height */
+    width: 100vw;
+    /* Ensure full width of the viewport */
+    background-color: #e8f5e9;
+    /* Light green background */
+    padding: 0 5rem;
+    box-sizing: border-box;
+    overflow: hidden;
+    /* Prevent scrolling */
+    position: relative;
+}
+
+/* Left content container */
+.content-container {
+    text-align: center;
+    width: 50%;
+    /* Left half of the page */
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
     height: 100%;
-    width: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
 }
 
-.welcome-text {
-    font-size: 10rem;
+/* App Name Styling */
+.app-name {
+    font-size: 6rem;
+    background: -webkit-linear-gradient(#66bb6a, #2e7d32);
+    /* Gradient text */
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-family: 'Arial Black', sans-serif;
+    margin-bottom: 1rem;
+    text-shadow: 2px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* Description Styling */
+.app-description {
+    font-size: 1.8rem;
+    color: #4caf50;
     margin-bottom: 2rem;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
+/* Button Container */
 .button-container {
     display: flex;
-    gap: 1rem;
+    justify-content: center;
+    gap: 2rem;
+    margin-top: 2rem;
 }
 
-/* New CSS for Log In button */
-.login-button {
-    position: absolute; /* Positioning it absolutely */
-    top: 20px; /* Adjust as needed */
-    right: 20px; /* Adjust as needed */
-    padding: 0.5rem 1rem;
-    font-size: 1.5rem; /* Smaller font size for the log in button */
+/* Buttons Styling */
+.welcome-button {
+    padding: 1rem 2rem;
+    font-size: 1.5rem;
     cursor: pointer;
     background: #4caf50;
     color: white;
     border: none;
-    border-radius: 4px;
+    border-radius: 8px;
     transition: background-color 0.3s;
 }
 
-.login-button:hover {
-    background: #45a049;
+.welcome-button:hover {
+    background: #388e3c;
 }
 
+/* Right-side logo container */
+.logo-container {
+    width: 50%;
+    /* Right half of the page */
+    display: flex;
+    justify-content: flex-end;
+    /* Push the logo to the right edge */
+    align-items: center;
+    height: 100%;
+    /* Full height for centering */
+}
+
+.school-logo {
+    width: 60%;
+    /* Adjust size for better visual balance */
+    height: auto;
+    opacity: 0.9;
+}
+
+/* Logout Button Styling */
 .logout-button {
-    position: absolute; /* Positioning it absolutely */
-    top: 20px; /* Adjust as needed */
-    right: 20px; /* Adjust as needed */
-    padding: 0.5rem 1rem;
-    font-size: 1.5rem; /* Smaller font size for the log out button */
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    padding: 0.8rem 1.5rem;
+    font-size: 1.2rem;
     cursor: pointer;
     background: #4caf50;
     color: white;
@@ -54,20 +108,5 @@
 }
 
 .logout-button:hover {
-    background: #45a049;
-}
-
-.welcome-button {
-    padding: 0.5rem 1rem;
-    font-size: 2rem;
-    cursor: pointer;
-    background: #4caf50;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    transition: background-color 0.3s;
-}
-
-.welcome-button:hover {
-    background: #45a049;
+    background: #388e3c;
 }

@@ -1,5 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import MasonLogo from '../../assets/MasonLogo.png';
 import './WelcomePage.css';
 
 function WelcomePage() {
@@ -37,19 +38,27 @@ function WelcomePage() {
 
     return (
         <div className='welcome-container'>
-            <h1 className='welcome-text'>Welcome</h1>
+            <div className='content-container'>
+                <h1 className='app-name'>Gather Mason</h1>
+                <p className='app-description'>
+                    GatherMason is a platform that connects Mason students through events, activities, and group experiences, fostering stronger campus connections and community engagement.
+                </p>
+
+                <div className='button-container'>
+                    <button className='welcome-button' onClick={addEvent}>Add Event</button>
+                    <button className='welcome-button' onClick={showEvent}>Join Event</button>
+                </div>
+            </div>
+
+            {/* School Logo on the right half */}
+            <div className='logo-container'>
+                <img className='school-logo' src={MasonLogo} alt='School Logo' />
+            </div>
 
             {/* Conditional Rendering for Log In / Log Out Button */}
-            {isAuthenticated ? (
+            {isAuthenticated && (
                 <button className='logout-button' onClick={handleLogout}>Log Out</button>
-            ) : (
-                <button className='login-button' onClick={handleLogin}>Log In</button>
             )}
-
-            <div className='button-container'>
-                <button className='welcome-button' onClick={addEvent}>Add Event</button>
-                <button className='welcome-button' onClick={showEvent}>Enroll Event</button>
-            </div>
         </div>
     );
 }
