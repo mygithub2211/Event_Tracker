@@ -72,13 +72,6 @@ function EventPage() {
 
     // Function to handle joining the event
     const handleJoinEvent = async (eventId) => {
-        //const userData = {
-        //    firstName: localStorage.getItem('firstName'),
-        //    lastName: localStorage.getItem('lastName'),
-        //    email: localStorage.getItem('email'),
-        //    gNumber: localStorage.getItem('gNumber')
-        //};
-
         if (!signedInUser || !signedInUser.firstName || !signedInUser.lastName || !signedInUser.email || !signedInUser.gNumber) {
             console.error('Missing user data, cannot join event');
             setError('Missing user data, cannot join event');
@@ -90,6 +83,14 @@ function EventPage() {
             setError('signedInUser is empty');
             return;
         }
+
+        // Show the confirmation popup
+        const isConfirmed = window.confirm("Are you sure you want to join this event?");
+        if (!isConfirmed) {
+            console.log('User canceled joining the event.');
+            return; // If user cancel joining, do nothing and return
+        }
+        
 
         const enrollData = { firstName: signedInUser.firstName, lastName: signedInUser.lastName, email: signedInUser.email, gNumber: signedInUser.gNumber }
         console.log('Sending request to join event with data:', enrollData, 'for eventId:', eventId);
